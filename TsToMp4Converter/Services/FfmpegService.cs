@@ -10,16 +10,22 @@ namespace TsToMp4Converter.Services;
 public partial class FfmpegService
 {
     private readonly string _ffmpegPath;
+    private readonly string _downloadPath;
 
     public FfmpegService()
     {
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
         _ffmpegPath = Path.Combine(baseDir, "bin", "ffmpeg.exe");
+        _downloadPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "TsToMp4Converter", "bin", "ffmpeg.exe");
     }
 
-    public string FfmpegPath => _ffmpegPath;
+    public string FfmpegPath => File.Exists(_ffmpegPath) ? _ffmpegPath : _downloadPath;
 
-    public bool FfmpegExists => File.Exists(_ffmpegPath);
+    public bool FfmpegExists => File.Exists(EffectivePath);
+
+    private string EffectivePath => File.Exists(_ffmpegPath) ? _ffmpegPath : _downloadPath;
 
     public async Task ConvertAsync(
         ConversionJob job,
@@ -34,7 +40,7 @@ public partial class FfmpegService
 
         var psi = new ProcessStartInfo
         {
-            FileName = _ffmpegPath,
+            FileName = EffectivePath,
             Arguments = $"-i \"{job.InputPath}\" -c:v copy -c:a copy -map 0 -y \"{job.OutputPath}\"",
             UseShellExecute = false,
             CreateNoWindow = true,
@@ -106,7 +112,7 @@ public partial class FfmpegService
 
     public async Task DownloadFfmpegAsync(IProgress<double>? progress = null, CancellationToken ct = default)
     {
-        var binDir = Path.GetDirectoryName(_ffmpegPath)!;
+        var binDir = Path.GetDirectoryName(_downloadPath)!;
         Directory.CreateDirectory(binDir);
 
         var zipPath = Path.Combine(Path.GetTempPath(), $"ffmpeg_{Guid.NewGuid():N}.zip");
@@ -137,7 +143,7 @@ public partial class FfmpegService
         using var archive = ZipFile.OpenRead(zipPath);
         var ffmpegEntry = archive.Entries.First(e =>
             e.FullName.EndsWith("/ffmpeg.exe", StringComparison.OrdinalIgnoreCase));
-        ffmpegEntry.ExtractToFile(_ffmpegPath, overwrite: true);
+        ffmpegEntry.ExtractToFile(_downloadPath, overwrite: true);
 
         try { File.Delete(zipPath); } catch { }
     }
@@ -160,7 +166,7 @@ public partial class FfmpegService
     {
         var psi = new ProcessStartInfo
         {
-            FileName = _ffmpegPath,
+            FileName = EffectivePath,
             Arguments = $"-i \"{filePath}\"",
             UseShellExecute = false,
             CreateNoWindow = true,
