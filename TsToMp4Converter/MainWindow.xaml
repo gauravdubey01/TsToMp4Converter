@@ -167,14 +167,45 @@
                     </Grid>
                 </Border>
 
-                <!-- Right: FFmpeg banner -->
-                <Border Grid.Column="2"
-                        Background="#1A1A2E" BorderBrush="#F59E0B" BorderThickness="1"
-                        CornerRadius="4" Padding="10,6"
+                <!-- Right: FFmpeg status -->
+                <Border Grid.Column="2" MinWidth="140"
+                        BorderThickness="1" CornerRadius="6" Padding="10,6"
                         Visibility="{Binding FfmpegMissing, Converter={StaticResource BoolToVis}}">
-                    <TextBlock Foreground="#FBBF24" FontSize="12">
-                        ffmpeg.exe missing
-                    </TextBlock>
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Background" Value="#1A1A2E"/>
+                            <Setter Property="BorderBrush" Value="#F59E0B"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsDownloadingFfmpeg}" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource Brush.AccentGlow}"/>
+                                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Accent}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <StackPanel>
+                        <TextBlock Foreground="#FBBF24" FontSize="12"
+                                   Visibility="{Binding IsDownloadingFfmpeg, Converter={StaticResource BoolToVisInverse}}">
+                            ffmpeg.exe missing
+                        </TextBlock>
+                        <TextBlock Foreground="{StaticResource Brush.Accent}" FontSize="12"
+                                   Visibility="{Binding IsDownloadingFfmpeg, Converter={StaticResource BoolToVis}}">
+                            <Run Text="{Binding FfmpegDownloadStatus}"/>
+                        </TextBlock>
+                        <ProgressBar Value="{Binding FfmpegDownloadProgress}" Maximum="100"
+                                     Height="3" Margin="0,4,0,0"
+                                     Visibility="{Binding IsDownloadingFfmpeg, Converter={StaticResource BoolToVis}}"/>
+                        <Button Command="{Binding DownloadFfmpegCommand}"
+                                Style="{StaticResource PrimaryButton}"
+                                Padding="8,3" FontSize="11"
+                                Margin="0,4,0,0"
+                                Visibility="{Binding IsDownloadingFfmpeg, Converter={StaticResource BoolToVisInverse}}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="⬇" Margin="0,0,4,0"/>
+                                <TextBlock Text="Download ffmpeg"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
                 </Border>
             </Grid>
         </Border>

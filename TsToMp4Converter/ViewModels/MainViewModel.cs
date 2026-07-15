@@ -38,11 +38,57 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private bool _ffmpegMissing;
 
+    [ObservableProperty]
+    private bool _isDownloadingFfmpeg;
+
+    [ObservableProperty]
+    private double _ffmpegDownloadProgress;
+
+    [ObservableProperty]
+    private string _ffmpegDownloadStatus = string.Empty;
+
     public string Version => typeof(MainViewModel).Assembly.GetName().Version?.ToString(3) ?? "1.0";
 
     public MainViewModel()
     {
         FfmpegMissing = !_ffmpeg.FfmpegExists;
+        if (FfmpegMissing)
+            StatusText = "ffmpeg not found — click 'Download ffmpeg' to get it";
+    }
+
+    [RelayCommand]
+    private async Task DownloadFfmpeg()
+    {
+        if (IsDownloadingFfmpeg) return;
+
+        IsDownloadingFfmpeg = true;
+        FfmpegDownloadProgress = 0;
+        FfmpegDownloadStatus = "Downloading ffmpeg...";
+        StatusText = "Downloading ffmpeg (~110 MB)...";
+
+        try
+        {
+            var progress = new Progress<double>(p =>
+            {
+                FfmpegDownloadProgress = p;
+                FfmpegDownloadStatus = $"Downloading... {p:F0}%";
+            });
+
+            await _ffmpeg.DownloadFfmpegAsync(progress);
+            FfmpegDownloadProgress = 100;
+            FfmpegDownloadStatus = "Complete!";
+            FfmpegMissing = false;
+            StatusText = "ffmpeg ready — add files to convert";
+        }
+        catch (Exception ex)
+        {
+            FfmpegDownloadStatus = $"Failed: {ex.Message}";
+            StatusText = "ffmpeg download failed";
+        }
+        finally
+        {
+            IsDownloadingFfmpeg = false;
+        }
     }
 
     [RelayCommand]

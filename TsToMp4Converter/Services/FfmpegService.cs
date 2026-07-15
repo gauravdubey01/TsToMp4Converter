@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using TsToMp4Converter.Models;
 
@@ -97,6 +99,47 @@ public partial class FfmpegService
             throw new InvalidOperationException("Output file was not created.");
 
         progress?.Report(100);
+    }
+
+    private const string FfmpegDownloadUrl =
+        "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip";
+
+    public async Task DownloadFfmpegAsync(IProgress<double>? progress = null, CancellationToken ct = default)
+    {
+        var binDir = Path.GetDirectoryName(_ffmpegPath)!;
+        Directory.CreateDirectory(binDir);
+
+        var zipPath = Path.Combine(Path.GetTempPath(), $"ffmpeg_{Guid.NewGuid():N}.zip");
+
+        using var client = new HttpClient { Timeout = TimeSpan.FromMinutes(10) };
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("TsToMp4Converter/1.0");
+
+        using var response = await client.GetAsync(FfmpegDownloadUrl, HttpCompletionOption.ResponseHeadersRead, ct);
+        response.EnsureSuccessStatusCode();
+
+        var totalBytes = response.Content.Headers.ContentLength ?? -1;
+        await using var stream = await response.Content.ReadAsStreamAsync(ct);
+        var fileStream = File.Create(zipPath);
+        await using (fileStream.ConfigureAwait(false))
+        {
+            var buffer = new byte[81920];
+            long bytesRead = 0;
+            int read;
+            while ((read = await stream.ReadAsync(buffer, ct)) > 0)
+            {
+                await fileStream.WriteAsync(buffer.AsMemory(0, read), ct);
+                bytesRead += read;
+                if (totalBytes > 0)
+                    progress?.Report((double)bytesRead / totalBytes * 100);
+            }
+        }
+
+        using var archive = ZipFile.OpenRead(zipPath);
+        var ffmpegEntry = archive.Entries.First(e =>
+            e.FullName.EndsWith("/ffmpeg.exe", StringComparison.OrdinalIgnoreCase));
+        ffmpegEntry.ExtractToFile(_ffmpegPath, overwrite: true);
+
+        try { File.Delete(zipPath); } catch { }
     }
 
     private static string ExtractErrorMessage(string errorText)

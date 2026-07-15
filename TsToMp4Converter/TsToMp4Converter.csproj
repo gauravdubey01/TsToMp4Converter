@@ -16,12 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="bin\ffmpeg.exe" Link="bin\ffmpeg.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Resources\ts-to-mp4.png"/>
     <Resource Include="Resources\ts-to-mp4.ico"/>
   </ItemGroup>
