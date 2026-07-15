@@ -1,0 +1,132 @@
+<Window x:Class="TsToMp4Converter.TutorialWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="How to Use TS to MP4 Converter"
+        Height="520" Width="580"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="{StaticResource Brush.Background}"
+        Foreground="{StaticResource Brush.Foreground}">
+    <Window.Resources>
+        <Style x:Key="StepNumber" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource Brush.Accent}"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Width" Value="28"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="StepIcon" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Border Margin="20" Background="{StaticResource Brush.Surface}"
+            BorderBrush="{StaticResource Brush.Border}" BorderThickness="1"
+            CornerRadius="10" Padding="24">
+        <StackPanel>
+            <TextBlock Text="Getting Started" Style="{StaticResource Heading}"
+                       Margin="0,0,0,4"/>
+            <TextBlock Text="Follow these simple steps to convert your .ts files to .mp4"
+                       Style="{StaticResource Subheading}" Margin="0,0,0,20"/>
+
+            <!-- Step 1 -->
+            <Grid Margin="0,0,0,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource StepNumber}">
+                    <TextBlock Text="1" Style="{StaticResource StepIcon}"/>
+                </Border>
+                <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                    <TextBlock Text="Add Files" FontWeight="SemiBold" FontSize="14"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="12"
+                               Foreground="{StaticResource Brush.Muted}" Margin="0,2,0,0">
+                        Click the "Add Files" button and select one or more .ts video files. 
+                        They will appear in the list below.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+
+            <!-- Step 2 -->
+            <Grid Margin="0,0,0,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource StepNumber}">
+                    <TextBlock Text="2" Style="{StaticResource StepIcon}"/>
+                </Border>
+                <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                    <TextBlock Text="Choose Output Folder" FontWeight="SemiBold" FontSize="14"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="12"
+                               Foreground="{StaticResource Brush.Muted}" Margin="0,2,0,0">
+                        By default, the converted file is saved in the same folder as the original. 
+                        Click "Browse" to choose a different destination.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+
+            <!-- Step 3 -->
+            <Grid Margin="0,0,0,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource StepNumber}">
+                    <TextBlock Text="3" Style="{StaticResource StepIcon}"/>
+                </Border>
+                <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                    <TextBlock Text="Convert" FontWeight="SemiBold" FontSize="14"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="12"
+                               Foreground="{StaticResource Brush.Muted}" Margin="0,2,0,0">
+                        Click "Convert All" to start the conversion. The progress bar shows 
+                        the overall status. You can cancel at any time.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+
+            <!-- Step 4 -->
+            <Grid Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource StepNumber}">
+                    <TextBlock Text="4" Style="{StaticResource StepIcon}"/>
+                </Border>
+                <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                    <TextBlock Text="Done!" FontWeight="SemiBold" FontSize="14"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="12"
+                               Foreground="{StaticResource Brush.Muted}" Margin="0,2,0,0">
+                        Once complete, the output folder opens automatically. Your .mp4 files 
+                        are ready to use — no quality loss, same resolution!
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+
+            <!-- Note -->
+            <Border Background="{StaticResource Brush.AccentGlow}"
+                    BorderBrush="{StaticResource Brush.Accent}" BorderThickness="1"
+                    CornerRadius="6" Padding="12,10">
+                <TextBlock FontSize="11" TextWrapping="Wrap"
+                           Foreground="{StaticResource Brush.Accent}">
+                    <Run FontWeight="SemiBold">Note:</Run> This converter uses stream copy 
+                    (no re-encoding), so conversion is fast and maintains the original quality.
+                </TextBlock>
+            </Border>
+
+            <!-- Close button -->
+            <Button x:Name="CloseButton" Style="{StaticResource PrimaryButton}"
+                    HorizontalAlignment="Center" Margin="0,16,0,0" Padding="32,8"
+                    Click="CloseButton_Click" IsDefault="True">
+                Got it
+            </Button>
+        </StackPanel>
+    </Border>
+</Window>

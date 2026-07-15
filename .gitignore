@@ -1,0 +1,17 @@
+## .NET build outputs
+**/bin/Release/*
+**/bin/Debug/*
+**/obj/*
+*.user
+*.suo
+*.cache
+*.nupkg
+
+## IDE
+.vs/
+*.csproj.user
+*.sln.docstates
+
+## OS
+Thumbs.db
+.DS_Store
