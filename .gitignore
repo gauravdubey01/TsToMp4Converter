@@ -10,6 +10,10 @@
 ## ffmpeg (downloaded on first run)
 **/ffmpeg.exe
 
+## MSIX packaging build outputs
+**/Package/Output/
+**/Package/*.pfx
+
 ## IDE
 .vs/
 *.csproj.user
