@@ -5,13 +5,13 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap rescap">
 
-  <Identity Name="GauravDubey.TsToMp4Converter"
-            Publisher="CN=GauravDubey"
+  <Identity Name="Gauravdubey.TSTOMP4CONVERTER"
+            Publisher="CN=0A36019C-61EA-47F2-A9AE-D3B27D5E13D4"
             Version="1.0.0.0" />
 
   <Properties>
     <DisplayName>TS to MP4 Converter</DisplayName>
-    <PublisherDisplayName>Gaurav Dubey</PublisherDisplayName>
+    <PublisherDisplayName>Gaurav_dubey</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
